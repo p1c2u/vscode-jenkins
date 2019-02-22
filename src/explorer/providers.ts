@@ -10,10 +10,9 @@ export class JenkinsProvider implements TreeDataProvider<BaseExplorerNode> {
 
     constructor(
         protected context: ExtensionContext,
-        protected client,
-        protected token: string
+        protected client
     ) {
-        const executor = new JenkinsExecutor(client, token)
+        const executor = new JenkinsExecutor(client)
         this._root = new SystemNode(this.context, executor);
     }
 

@@ -5,7 +5,7 @@ import { setFlagsFromString } from "v8";
 
 export class JenkinsExecutor {
 
-    constructor(protected client, protected token) { }
+    constructor(protected client) { }
 
     async getInfo(): Promise<any> {
         return new Promise((resolve, reject) => {

@@ -61,14 +61,6 @@
         "jenkins.url": {
           "type": "string",
           "description": "Specify Jenkins URL."
-        },
-        "jenkins.user": {
-          "type": "string",
-          "description": "Specify Jenkins user."
-        },
-        "jenkins.token": {
-          "type": "string",
-          "description": "Specify Jenkins user token."
         }
       }
     }
