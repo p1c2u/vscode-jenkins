@@ -1,0 +1,94 @@
+{
+  "name": "jenkins",
+  "displayName": "Jenkins",
+  "description": "Manage Jenkins",
+  "icon": "images/icon.png",
+  "version": "0.0.1",
+  "publisher": "p1c2u",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.25.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "jenkins",
+    "CI"
+  ],
+  "bugs": {
+    "url": "https://github.com/p1c2u/vscode-jenkins/issues",
+    "email": "maciag.artur@gmail.com"
+  },
+  "homepage": "https://github.com/p1c2u/vscode-jenkins",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/p1c2u/vscode-jenkins.git"
+  },
+  "activationEvents": [
+    "onView:jenkins",
+    "onDebugInitialConfigurations"
+  ],
+  "main": "./out/extension",
+  "contributes": {
+    "views": {
+      "jenkinsView": [
+        {
+          "id": "jenkins",
+          "name": "Explorer",
+          "when": "config.jenkins.showExplorer == true"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "jenkinsView",
+          "title": "Jenkins",
+          "icon": "images/jenkins.svg"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "Jenkins configuration",
+      "properties": {
+        "jenkins.showExplorer": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show Jenkins explorer."
+        },
+        "jenkins.url": {
+          "type": "string",
+          "description": "Specify Jenkins URL."
+        },
+        "jenkins.user": {
+          "type": "string",
+          "description": "Specify Jenkins user."
+        },
+        "jenkins.token": {
+          "type": "string",
+          "description": "Specify Jenkins user token."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "npm run build && node ./node_modules/vscode/bin/test"
+  },
+  "devDependencies": {
+    "typescript": "^3.2.1",
+    "vscode": "^1.1.18",
+    "@types/node": "^7.0.43",
+    "@types/mocha": "^2.2.42"
+  },
+  "dependencies": {
+    "applicationinsights": "^1.0.5",
+    "yaml-config-loader": "^2.0.1",
+    "jenkins": "0.23.0"
+  }
+}
