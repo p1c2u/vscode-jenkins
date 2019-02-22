@@ -60,7 +60,7 @@
         },
         "jenkins.url": {
           "type": "string",
-          "description": "Specify Jenkins URL."
+          "description": "Jenkins instance URL. Pass username and token in URL for authentication."
         }
       }
     }

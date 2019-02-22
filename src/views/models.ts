@@ -4,11 +4,7 @@ import { Job } from "../jobs/models";
 
 export class View {
 
-    constructor(
-        public readonly view: any,
-        private executor: JenkinsExecutor
-    ) {
-    }
+    constructor(public readonly view: any, private executor: JenkinsExecutor) {}
 
     async getJobs(): Promise<Job[]> {
         return new Promise((resolve, reject) => {
@@ -18,22 +14,14 @@ export class View {
         });
     }
 
-    getName(): string {
-        return this.view.name;
-    }
+    getName = (): string => this.view.name;
 
 }
 
 export class Views {
 
-    constructor(
-        public readonly views: any,
-        private executor: JenkinsExecutor
-    ) {
-    }
+    constructor(public readonly views: any, private executor: JenkinsExecutor) {}
 
-    getViewsList(): View[] {
-        return this.views.map(view => new View(view, this.executor));
-    }
+    getViewsList = (): View[] => this.views.map(view => new View(view, this.executor));
 
 }

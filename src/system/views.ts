@@ -1,37 +1,34 @@
 'use strict';
-import { TreeItem, TreeItemCollapsibleState, Uri, ExtensionContext, window, ColorInformation } from 'vscode';
-import { ResourceType } from "../explorer/enums";
+import { ExtensionContext, TreeItem, TreeItemCollapsibleState } from 'vscode';
+
+import { ResourceType } from '../explorer/enums';
 import { ExplorerNode } from '../explorer/views';
-import { JenkinsExecutor } from '../jenkins/executors';
-import { Views } from "../views/models";
-import { ViewsNode } from "../views/nodes";
 import { NodesNode } from '../nodes/views';
-import { Nodes } from '../nodes/models';
+import { System } from '../system/models';
+import { ViewsNode } from '../views/nodes';
 
 export class SystemNode extends ExplorerNode {
+    children: Promise<[NodesNode, ViewsNode]>;
 
-    constructor(
-        context: ExtensionContext,
-        protected executor: JenkinsExecutor
-    ) {
+    constructor(context: ExtensionContext, protected system: System) {
         super(context);
     }
 
-    async getChildren(): Promise<ExplorerNode[]> {
+    getViews = (): Promise<ViewsNode> => this.system.getViews()
+        .then(views => new ViewsNode(this.context, views));
+
+    getNodes = (): Promise<NodesNode> => this.system.getNodes()
+        .then(nodes => new NodesNode(this.context, nodes));
+
+    getSystem = (): Promise<[NodesNode, ViewsNode]> => new Promise((resolve, reject) => {
+        resolve(Promise.all([this.getNodes(), this.getViews()]));
+    });
+
+    getChildren(): Promise<[NodesNode, ViewsNode]> {
         this.resetChildren();
 
-        return new Promise((resolve, reject) => {
-            var views = this.executor.getInfo()
-                .then(info => {
-                    return new ViewsNode(this.context, new Views(info.views, this.executor));
-                });
-            var nodes = this.executor.getNodeList()
-                .then(nodes => {
-                    return new NodesNode(this.context, new Nodes(nodes, this.executor));
-                });
-            var children = Promise.all([nodes, views]).then(values => values);
-            resolve(children);
-        });
+        this.children = this.getSystem();
+        return this.children;
     }
 
     getTreeItem(): TreeItem {

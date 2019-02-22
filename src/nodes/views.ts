@@ -1,15 +1,12 @@
 'use strict';
-import { TreeItem, TreeItemCollapsibleState, Uri, ExtensionContext, window, ColorInformation } from 'vscode';
+import { TreeItem, TreeItemCollapsibleState, ExtensionContext } from 'vscode';
 import { ResourceType } from "../explorer/enums";
 import { ExplorerNode } from '../explorer/views';
 import { Nodes, Node } from "../nodes/models";
 
 export class NodeNode extends ExplorerNode {
 
-    constructor(
-        context: ExtensionContext,
-        protected node: Node
-    ) {
+    constructor(context: ExtensionContext, protected node: Node) {
         super(context);
     }
 
@@ -28,18 +25,17 @@ export class NodeNode extends ExplorerNode {
 
 export class NodesNode extends ExplorerNode {
 
-    constructor(
-        context: ExtensionContext,
-        protected nodes: Nodes
-    ) {
+    constructor(context: ExtensionContext, protected nodes: Nodes) {
         super(context);
     }
 
-    async getChildren(): Promise<ExplorerNode[]> {
+    getNodeNodes = (): NodeNode[] => this.nodes.getNodesList()
+        .map(view => new NodeNode(this.context, view));
+
+    getChildren(): ExplorerNode[] {
         this.resetChildren();
 
-        this.children = this.nodes.getNodesList()
-            .map(view => new NodeNode(this.context, view));
+        this.children = this.getNodeNodes();
         return this.children;
     }
 

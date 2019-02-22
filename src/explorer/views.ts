@@ -2,7 +2,7 @@ import { Command, Disposable, ExtensionContext, TreeItem, TreeItemCollapsibleSta
 
 export abstract class BaseExplorerNode extends Disposable {
 
-    protected children: BaseExplorerNode[] | undefined;
+    protected children: any;
     protected disposable: Disposable | undefined;
 
     constructor(
@@ -62,7 +62,7 @@ export class MessageNode extends BaseExplorerNode {
 
 export abstract class ExplorerNode extends BaseExplorerNode {
 
-    protected children: ExplorerNode[] | undefined;
+    protected children: ExplorerNode[] | Promise<ExplorerNode[]>;
 
     handleError(err: Error): MessageNode[] {
         return [new MessageNode(this.context, 'unexpected error')];

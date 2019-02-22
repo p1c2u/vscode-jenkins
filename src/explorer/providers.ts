@@ -1,19 +1,17 @@
-import { TreeDataProvider, workspace, ExtensionContext, window, TreeItem } from "vscode";
+import { TreeDataProvider, ExtensionContext, window, TreeItem } from "vscode";
 import { BaseExplorerNode } from "../explorer/views";
 import { SystemNode } from "../system/views";
 import { JenkinsExecutor } from "../jenkins/executors";
+import { System } from "../system/models";
 
 export class JenkinsProvider implements TreeDataProvider<BaseExplorerNode> {
     
     private _root?: BaseExplorerNode;
     private _loading: Promise<void> | undefined;
 
-    constructor(
-        protected context: ExtensionContext,
-        protected client
-    ) {
+    constructor(protected context: ExtensionContext, protected client) {
         const executor = new JenkinsExecutor(client)
-        this._root = new SystemNode(this.context, executor);
+        this._root = new SystemNode(this.context, new System(executor));
     }
 
     async getChildren(node?:BaseExplorerNode): Promise<BaseExplorerNode[]> {

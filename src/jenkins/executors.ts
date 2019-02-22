@@ -1,37 +1,27 @@
 'use strict';
 
-import { ColorInformation } from "vscode";
-import { setFlagsFromString } from "v8";
-
 export class JenkinsExecutor {
 
     constructor(protected client) { }
 
-    async getInfo(): Promise<any> {
+    getInfo = (): Promise<any> => this.client.info();
+
+    getView = (name: string): Promise<any> => this.client.view.get(name);
+
+    getJob = (name: string): Promise<any> => this.client.job.get(name);
+
+    getBuildList = (name: string, limit: number = 10): Promise<any> => {
         return new Promise((resolve, reject) => {
-            return this.client.info((err, info: any) => {
+            return this.client.job.get(name, (err, job: any) => {
                 if (err) reject(err);
-                resolve(info);
+                var buildPromises = job.builds.map(build => this.getBuild(name, build.number));
+                resolve(Promise.all(buildPromises));
             });
         });
     }
 
-    async getView(name: string): Promise<any> {
-        return new Promise((resolve, reject) => {
-            return this.client.view.get(name, (err, info: any) => {
-                if (err) reject(err);
-                resolve(info);
-            });
-        });
-    }
+    getBuild = (name: string, build_number: number): Promise<any> => this.client.build.get(name, build_number);
 
-    async getNodeList(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            return this.client.node.list((err, nodes: any) => {
-                if (err) reject(err);
-                resolve(nodes);
-            });
-        });
-    }
+    getNodeList = (): Promise<any> => this.client.node.list();
 
 }

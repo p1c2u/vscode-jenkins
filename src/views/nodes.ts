@@ -1,5 +1,5 @@
 'use strict';
-import { TreeItem, TreeItemCollapsibleState, Uri, ExtensionContext, window, ColorInformation } from 'vscode';
+import { TreeItem, TreeItemCollapsibleState, ExtensionContext } from 'vscode';
 import { ResourceType } from "../explorer/enums";
 import { ExplorerNode } from '../explorer/views';
 import { JobNode } from '../jobs/nodes';
@@ -7,23 +7,23 @@ import { Views, View } from "../views/models";
 
 export class ViewNode extends ExplorerNode {
 
-    constructor(
-        context: ExtensionContext,
-        protected view: View
-    ) {
+    constructor(context: ExtensionContext, protected view: View) {
         super(context);
     }
 
-    async getChildren(): Promise<ExplorerNode[]> {
+    getJobs = (): Promise<JobNode[]> => new Promise((resolve, reject) => {
+        var views = this.view.getJobs()
+            .then(jobs => {
+                return jobs.map(job => new JobNode(this.context, job))
+            });
+        resolve(views);
+    })
+
+    getChildren(): Promise<ExplorerNode[]> {
         this.resetChildren();
 
-        return new Promise((resolve, reject) => {
-            var views = this.view.getJobs()
-                .then(jobs => {
-                    return jobs.map(job => new JobNode(this.context, job))
-                });
-            resolve(views);
-        });
+        this.children = this.getJobs();
+        return this.children;
     }
 
     getTreeItem(): TreeItem {
@@ -35,10 +35,7 @@ export class ViewNode extends ExplorerNode {
 
 export class ViewsNode extends ExplorerNode {
 
-    constructor(
-        context: ExtensionContext,
-        protected views: Views
-    ) {
+    constructor(context: ExtensionContext, protected views: Views) {
         super(context);
     }
 
