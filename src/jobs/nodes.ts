@@ -11,13 +11,10 @@ export class JobNode extends ExplorerNode {
         super(context);
     }
 
-    getBuilds = (): Promise<BuildNode[]> => new Promise((resolve, reject) => {
-        var builds = this.job.getBuilds()
-            .then(builds => builds.map(build => new BuildNode(this.context, build)));
-        resolve(builds);
-    });
+    getBuilds = (): Promise<BuildNode[]> => this.job.getBuildsList()
+        .then(builds => builds.map(build => new BuildNode(this.context, build)));
 
-    async getChildren(): Promise<ExplorerNode[]> {
+    getChildren(): Promise<ExplorerNode[]> {
         this.resetChildren();
 
         this.children = this.getBuilds();

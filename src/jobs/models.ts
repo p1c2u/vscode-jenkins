@@ -6,17 +6,16 @@ export class Job {
 
     constructor(public readonly job: any, private executor: JenkinsExecutor) {}
 
-    async getBuilds(): Promise<Build[]> {
-        return new Promise((resolve, reject) => {
-            var builds = this.executor.getBuildList(this.job.name)
-                .then(builds => {
-                    return builds.map(build => new Build(build, this.executor))
-                });
-            resolve(builds);
-        });
-    }
+    getBuild = (name: string, build_number: number): Promise<Build> => this.executor.getBuild(name, build_number)
+        .then(build => new Build(build, this.executor));
 
-    getName = (): string => this.job.name;
+    getBuildsList = (limit: number = 10): Promise<Build[]> => {
+        var latestbuilds = this.job.builds.slice(0, limit + 1)
+        var buildsPromises: any[] = latestbuilds.map(build => this.getBuild(this.job.name, build.number));
+        return Promise.all(buildsPromises);
+    };
+
+    getName = (): string => this.job.displayName;
 
     getColor = (): string => this.job.color;
 

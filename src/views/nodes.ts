@@ -11,13 +11,8 @@ export class ViewNode extends ExplorerNode {
         super(context);
     }
 
-    getJobs = (): Promise<JobNode[]> => new Promise((resolve, reject) => {
-        var views = this.view.getJobs()
-            .then(jobs => {
-                return jobs.map(job => new JobNode(this.context, job))
-            });
-        resolve(views);
-    })
+    getJobs = (): Promise<JobNode[]> => this.view.getJobsList()
+        .then(jobs => jobs.map(job => new JobNode(this.context, job)));
 
     getChildren(): Promise<ExplorerNode[]> {
         this.resetChildren();
@@ -39,11 +34,13 @@ export class ViewsNode extends ExplorerNode {
         super(context);
     }
 
+    getViews = (): Promise<ViewNode[]> => this.views.getViewsList()
+        .then(views => views.map(view => new ViewNode(this.context, view)));
+
     async getChildren(): Promise<ExplorerNode[]> {
         this.resetChildren();
 
-        this.children = this.views.getViewsList()
-            .map(view => new ViewNode(this.context, view));
+        this.children = this.getViews();
         return this.children;
     }
 
