@@ -20,9 +20,7 @@ export class SystemNode extends ExplorerNode {
     getNodes = (): Promise<NodesNode> => this.system.getNodes()
         .then(nodes => new NodesNode(this.context, nodes));
 
-    getSystem = (): Promise<[NodesNode, ViewsNode]> => new Promise((resolve, reject) => {
-        resolve(Promise.all([this.getNodes(), this.getViews()]));
-    });
+    getSystem = (): Promise<[NodesNode, ViewsNode]> => Promise.all([this.getNodes(), this.getViews()]);
 
     getChildren(): Promise<[NodesNode, ViewsNode]> {
         this.resetChildren();
