@@ -19,6 +19,9 @@ export class NodeNode extends ExplorerNode {
     getTreeItem(): TreeItem {
         const item = new TreeItem(this.node.getName());
         item.contextValue = ResourceType.Node;
+        const icon = this.node.getIcon();
+        if (icon !== undefined)
+            item.iconPath = this.context.asAbsolutePath(this.node.getIconPath());
         return item;
     }
 }

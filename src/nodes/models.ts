@@ -7,6 +7,10 @@ export class Node {
 
     getName = (): string => this.node.displayName;
 
+    getIcon = (): string => this.node.icon;
+
+    getIconPath = (): string => 'resources/node/' + this.getIcon();
+
 }
 
 export class Nodes {
