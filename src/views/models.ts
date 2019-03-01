@@ -22,6 +22,8 @@ export class View {
 
     getName = (): string => this.view.name;
 
+    getURL = (): string => this.view.url;
+
 }
 
 export class Views {

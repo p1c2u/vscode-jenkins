@@ -7,7 +7,7 @@
   "publisher": "p1c2u",
   "license": "MIT",
   "engines": {
-    "vscode": "^1.25.0"
+    "vscode": "^1.31.0"
   },
   "categories": [
     "Other"
@@ -26,26 +26,84 @@
     "url": "https://github.com/p1c2u/vscode-jenkins.git"
   },
   "activationEvents": [
-    "onView:jenkins",
+    "onView:jenkins.views.system",
+    "onView:jenkins.views.nodes",
+    "onView:jenkins.views.views",
     "onDebugInitialConfigurations"
   ],
   "main": "./out/extension",
   "contributes": {
     "views": {
-      "jenkinsView": [
+      "jenkins": [
         {
-          "id": "jenkins",
-          "name": "Explorer",
-          "when": "config.jenkins.showExplorer == true"
+          "id": "jenkins.views.system",
+          "name": "System",
+          "when": "config.jenkins.views.system.enabled"
+        },
+        {
+          "id": "jenkins.views.nodes",
+          "name": "Nodes",
+          "when": "config.jenkins.views.nodes.enabled"
+        },
+        {
+          "id": "jenkins.views.views",
+          "name": "Views",
+          "when": "config.jenkins.views.views.enabled"
         }
       ]
     },
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "jenkinsView",
+          "id": "jenkins",
           "title": "Jenkins",
           "icon": "images/jenkins.svg"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "jenkins.openJobUrlToClipboard",
+        "title": "Open in Browser",
+        "category": "Jenkins"
+      },
+      {
+        "command": "jenkins.openViewUrlToClipboard",
+        "title": "Open in Browser",
+        "category": "Jenkins"
+      },
+      {
+        "command": "jenkins.copyJobUrlToClipboard",
+        "title": "Copy Url",
+        "category": "Jenkins"
+      },
+      {
+        "command": "jenkins.copyViewUrlToClipboard",
+        "title": "Copy Url",
+        "category": "Jenkins"
+      }
+    ],
+    "menus": {
+      "view/item/context": [
+        {
+          "command": "jenkins.openJobUrlToClipboard",
+          "when": "view =~ /^jenkins\\.views/ && viewItem == jenkins:job",
+          "group": "1_jenkins@0"
+        },
+        {
+          "command": "jenkins.openViewUrlToClipboard",
+          "when": "view =~ /^jenkins\\.views/ && viewItem == jenkins:view",
+          "group": "1_jenkins@0"
+        },
+        {
+          "command": "jenkins.copyJobUrlToClipboard",
+          "when": "view =~ /^jenkins\\.views/ && viewItem == jenkins:job",
+          "group": "2_jenkins@1"
+        },
+        {
+          "command": "jenkins.copyViewUrlToClipboard",
+          "when": "view =~ /^jenkins\\.views/ && viewItem == jenkins:view",
+          "group": "2_jenkins@0"
         }
       ]
     },
@@ -53,10 +111,20 @@
       "type": "object",
       "title": "Jenkins configuration",
       "properties": {
-        "jenkins.showExplorer": {
+        "jenkins.views.system.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Specifies whether to show the _System_ view."
+        },
+        "jenkins.views.nodes.enabled": {
           "type": "boolean",
           "default": true,
-          "description": "Show Jenkins explorer."
+          "description": "Specifies whether to show the _Nodes_ view."
+        },
+        "jenkins.views.views.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Specifies whether to show the _Views_ view."
         },
         "jenkins.url": {
           "type": "string",
@@ -74,7 +142,7 @@
   },
   "devDependencies": {
     "typescript": "^3.2.1",
-    "vscode": "^1.1.18",
+    "vscode": "^1.1.30",
     "@types/node": "^7.0.43",
     "@types/mocha": "^2.2.42"
   },

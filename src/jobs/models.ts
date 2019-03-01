@@ -38,4 +38,6 @@ export class Job {
 
     getIconPath = (): string => 'resources/job/' + this.getColor() + '.png';
 
+    getURL = (): string => this.job.url;
+
 }

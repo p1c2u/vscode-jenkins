@@ -11,6 +11,8 @@ export class ViewNode extends ExplorerNode {
         super(context);
     }
 
+    getURL = (): string => this.view.getURL();
+
     getJobs = (): Promise<JobNode[]> => this.view.getJobsList()
         .then(jobs => jobs.map(job => new JobNode(this.context, job)));
 
@@ -23,7 +25,7 @@ export class ViewNode extends ExplorerNode {
 
     getTreeItem(): TreeItem {
         const item = new TreeItem(this.view.getName(), TreeItemCollapsibleState.Collapsed);
-        item.contextValue = ResourceType.Views;
+        item.contextValue = ResourceType.View;
         return item;
     }
 }

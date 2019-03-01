@@ -15,6 +15,8 @@ export class JobNode extends ExplorerNode {
     // getBuilds = (): Promise<BuildNode[]> => this.job.getBuildsList()
     //     .then(builds => builds.map(build => new BuildNode(this.context, build)));
 
+    getURL = (): string => this.job.getURL();
+
     getBuilds = (): Promise<BuildsNode> => this.job.getBuilds()
         .then(builds => new BuildsNode(this.context, builds));
 
